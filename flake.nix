@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
   };
 
   outputs = { nixpkgs, ... }@inputs: {
@@ -24,6 +24,7 @@
               (writeShellScriptBin ''mp-deploy-firmware'' ''esptool.py --port /dev/ttyUSB0 --baud 460800 write_flash 0x1000'')
               (writeShellScriptBin ''mp-REPL'' ''picocom /dev/ttyUSB0 -b115200'')
               (writeShellScriptBin ''mp-flash'' ''ampy --port /dev/ttyUSB0 put'')
+              (writeShellScriptBin ''pip-refresh'' ''rm -rf _pip_packages && pip install -r requierments.txt'')
             ];
 
             PIP_PREFIX = ''_pip_packages'';
@@ -33,8 +34,7 @@
             shellHook = ''
               unset SOURCE_DATE_EPOCH
               if [ ! -d "$PIP_PREFIX" ]; then
-               pip install micropython-esp32-stubs
-               pip install micropython-esp32-stubs
+               pip install -r requierments.txt
               fi
             '';
           };
