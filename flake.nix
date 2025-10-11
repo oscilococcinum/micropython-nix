@@ -38,10 +38,11 @@
                   ++ [
                     pythonWithPackages
                     (writeShellScriptBin ''mp-erase'' ''esptool.py --port /dev/ttyUSB0 erase_flash'')
-                    (writeShellScriptBin ''mp-deploy-firmware'' ''esptool.py --port /dev/ttyUSB0 --baud 460800 write_flash 0x1000'')
+                    (writeShellScriptBin ''mp-deploy-firmware'' ''esptool.py --port /dev/ttyUSB0 --baud 460800 write_flash 0x1000 $1'')
                     (writeShellScriptBin ''mp-REPL'' ''picocom /dev/ttyUSB0 -b115200'')
-                    (writeShellScriptBin ''mp-flash'' ''ampy --port /dev/ttyUSB0 put'')
+                    (writeShellScriptBin ''mp-flash'' ''ampy --port /dev/ttyUSB0 put $1 $2'')
                   ];
+                shellHook = "echo '#INFO To exit picocom(REPL) - Ctrl-a -> Ctrl-x'";
               };
 
               default = esp32-dev;
