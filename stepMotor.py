@@ -37,7 +37,7 @@ def rising_sw(pin):
     global oldPosition, position
     if encoder_sw.value() == 0:
         enaOut.value(1)
-        oldPosition = position
+        position = 0
         print(f'sw = {encoder_sw.value()}')
 
 encoder_a.irq(trigger=Pin.IRQ_FALLING, handler=falling_a)
@@ -45,17 +45,15 @@ encoder_b.irq(trigger=Pin.IRQ_FALLING, handler=falling_b)
 encoder_sw.irq(trigger=Pin.IRQ_FALLING, handler=rising_sw)
 
 while True:
-    if position > oldPosition:
-        dirOut.value(1)
-        enaOut.value(0)
-    elif position < oldPosition:
-        dirOut.value(0)
-        enaOut.value(0)
-    else:
-        enaOut.value(1)
-
-    time.sleep(0.5)
-    if dirOut.value() and not enaOut.value():
-        oldPosition += 1
-    if not dirOut.value() and not enaOut.value():
-        oldPosition -= 1
+    while position != 0 and encoder_sw.value():
+        time.sleep(0.15)
+        if position > 0:
+            dirOut.value(1)
+            enaOut.value(0)
+            position = position - 1
+        elif position < 0:
+            dirOut.value(0)
+            enaOut.value(0)
+            position = position + 1
+        print(position)
+    enaOut.value(1)
