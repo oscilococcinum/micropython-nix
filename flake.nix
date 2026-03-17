@@ -1,10 +1,10 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
   };
 
   outputs =
-    { nixpkgs, ... }@inputs:
+    { nixpkgs, ... }:
     let
       pkgs = import <nixpkgs> { };
     in
@@ -37,8 +37,8 @@
                   ])
                   ++ [
                     pythonWithPackages
-                    (writeShellScriptBin "mp-erase" "esptool.py --port /dev/ttyUSB0 erase_flash")
-                    (writeShellScriptBin "mp-deploy-firmware" "esptool.py --port /dev/ttyUSB0 --baud 460800 write_flash 0x1000 $1")
+                    (writeShellScriptBin "mp-erase" "esptool --port /dev/ttyUSB0 erase_flash")
+                    (writeShellScriptBin "mp-deploy-firmware" "esptool --port /dev/ttyUSB0 --baud 460800 write_flash 0x1000 $1")
                     (writeShellScriptBin "mp-REPL" "picocom /dev/ttyUSB0 -b115200")
                     (writeShellScriptBin "mp-flash" "ampy --port /dev/ttyUSB0 put $1 $2")
                   ];
