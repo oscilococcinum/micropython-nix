@@ -1,23 +1,22 @@
 from machine import Pin
-from dataclasses import dataclass
 import time
 
-@dataclass
-class esp32:
-    increment = 10
-    position = 0
-    leftOut = Pin(26, Pin.OUT)
-    rightOut = Pin(25, Pin.OUT)
-    encoder_a = Pin(32, Pin.IN, Pin.PULL_UP)
-    encoder_b = Pin(33, Pin.IN, Pin.PULL_UP)
-    encoder_sw = Pin(19, Pin.IN, Pin.PULL_UP)
+class Esp32:
+    def __init__(self) -> None:
+        self.increment = 10
+        self.position = 0
+        self.leftOut = Pin(26, Pin.OUT)
+        self.rightOut = Pin(25, Pin.OUT)
+        self.encoder_a = Pin(32, Pin.IN, Pin.PULL_UP)
+        self.encoder_b = Pin(33, Pin.IN, Pin.PULL_UP)
+        self.encoder_sw = Pin(19, Pin.IN, Pin.PULL_UP)
 
-    def __post_init__(self) -> None:
         self.leftOut.value(0)
         self.rightOut.value(0)
         self.encoder_a.irq(trigger=Pin.IRQ_FALLING, handler=self.falling_a)
         self.encoder_b.irq(trigger=Pin.IRQ_FALLING, handler=self.falling_b)
         self.encoder_sw.irq(trigger=Pin.IRQ_FALLING, handler=self.falling_sw)
+
 
     def falling_a(self, pin: Pin):
         if self.encoder_a.value() == 0 and self.encoder_b.value() == 1:
@@ -34,7 +33,7 @@ class esp32:
         self.position = 0
         print(f'{self.position}')
 
-esp = esp32()
+esp32 = Esp32()
 while True:
     while esp32.position != 0:
         time.sleep(0.2)

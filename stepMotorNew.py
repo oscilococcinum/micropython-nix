@@ -1,20 +1,18 @@
 from machine import Pin, PWM
-from dataclasses import dataclass
 import time
 
-@dataclass
 class esp32:
-    position = 0
-    mode = 0
-    increment = 1
-    pinDir = Pin(26, Pin.OUT)
-    motorMotion = Pin(27, Pin.OUT)
-    pinPWMOut = PWM(Pin(25), freq=500, duty_u16=65536//(100//50))
-    encoder_a = Pin(32, Pin.IN, Pin.PULL_UP)
-    encoder_b = Pin(33, Pin.IN, Pin.PULL_UP)
-    encoder_sw = Pin(19, Pin.IN, Pin.PULL_UP)
+    def __init__(self) -> None:
+        self.position = 0
+        self.mode = 0
+        self.increment = 1
+        self.pinDir = Pin(26, Pin.OUT)
+        self.motorMotion = Pin(27, Pin.OUT)
+        self.pinPWMOut = PWM(Pin(25), freq=500, duty_u16=65536//(100//50))
+        self.encoder_a = Pin(32, Pin.IN, Pin.PULL_UP)
+        self.encoder_b = Pin(33, Pin.IN, Pin.PULL_UP)
+        self.encoder_sw = Pin(19, Pin.IN, Pin.PULL_UP)
 
-    def __post_init__(self) -> None:
         self.pinDir.value(0)
         self.motorMotion.value(1)
         self.encoder_a.irq(trigger=Pin.IRQ_FALLING, handler=self.motionClockwise)
